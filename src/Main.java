@@ -19,8 +19,8 @@ public class Main {
         users.add(new User("techmaster","aaaaa111","66668888",500000000,"0864212365"));
         convertObjectToJsonFile("user.json", users);
         userService userService = new userService();
-//        String fileUser = "user.json";
-//        userService.startProgram(scanner, fileUser);
+        String fileUser = "user.json";
+        userService.startProgram(scanner, fileUser);
 
     }
 
@@ -31,7 +31,7 @@ public class Main {
 
             Writer writer = Files.newBufferedWriter(Paths.get(s));
 
-            gson.toJson(s, writer);
+            gson.toJson(users, writer);
 
             writer.close();
         } catch (Exception e) {

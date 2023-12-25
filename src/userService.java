@@ -71,9 +71,11 @@ public class userService extends userManager implements userLogin,userForgotPass
         for (User user : users){
             if (user.getAccount().equals(accountName)&&user.getPassword().equals(accountPassword)){
                 loginSuccess(scanner,fileUser,user);
+                break;
             }
             else{
                 System.out.println("Tài khoản hoặc mật khẩu không chính xác.");
+                break;
             }
         }
     }
