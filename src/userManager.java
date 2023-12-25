@@ -14,23 +14,20 @@ public abstract class userManager {
     abstract void checkBalance(Scanner scanner, User user, String fileUser);
     abstract void banking(Scanner scanner, User user, String fileUser);
     abstract void checkHistory(Scanner scanner, User user, String fileUser);
-    public void convertObjectToJsonFile(String fileUser , Object obj) {
+    public static void convertObjectToJsonFile(String s, List<User> users) {
         try {
-            // Tạo đối tượng gson
+
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-            // Tạo đối tượng Writer để ghi nội dung vào file
-            Writer writer = Files.newBufferedWriter(Paths.get(fileUser));
+            Writer writer = Files.newBufferedWriter(Paths.get(s));
 
-            // Ghi object vào file
-            gson.toJson(obj, writer);
+            gson.toJson(users, writer);
 
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public List<User> getListObjectFromJsonFile(String fileUser) {
         try {
             Gson gson = new Gson();
