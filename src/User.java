@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class User {
     private String account;
     private String password;
@@ -61,5 +63,19 @@ public class User {
                 ", Số dư tài khoản '" + balance + '\'' +
                  + '\'' +
                 '}';
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        User that = (User) obj;
+        return Objects.equals(account, that.account);
+    }
+
+    // Override the hashCode method to ensure proper functioning in collections
+    @Override
+    public int hashCode() {
+        return (account != null ? account.hashCode() : 0);
     }
 }
