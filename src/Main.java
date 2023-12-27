@@ -21,6 +21,5 @@ public class Main {
         userService userService = new userService();
         String fileUser = "user.json";
         userService.startProgram(scanner, fileUser);
-
     }
 }

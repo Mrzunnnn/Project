@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public abstract class userManager {
     abstract void checkBalance(Scanner scanner, User user, String fileUser);
-    abstract void banking(Scanner scanner, User user, String fileUser);
+    abstract void banking(Scanner scanner, String fileUser);
     abstract void checkHistory(Scanner scanner, User user, String fileUser);
     public static void convertObjectToJsonFile(String s, List<User> users) {
         try {
@@ -32,10 +32,12 @@ public abstract class userManager {
         try {
             Gson gson = new Gson();
             Reader reader = Files.newBufferedReader(Paths.get(fileUser));
-            if (gson.fromJson(reader, User[].class) == null) {
+            User[] userLstGson = gson.fromJson(reader, User[].class);
+
+            if (userLstGson == null) {
                 return Collections.emptyList();
             } else {
-                List<User> users = Arrays.asList(gson.fromJson(reader, User[].class));
+                List<User> users = Arrays.asList(userLstGson);
                 reader.close();
                 return users;
             }
