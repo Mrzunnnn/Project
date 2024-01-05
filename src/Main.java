@@ -19,7 +19,8 @@ public class Main {
         users.add(new User("techmaster","aaaaa111","66668888",500000000,"0864212365"));
         userManager.convertObjectToJsonFile("user.json", users);
         userService userService = new userService();
+        String History = "History.json";
         String fileUser = "user.json";
-        userService.startProgram(scanner, fileUser);
+        userService.startProgram(scanner,fileUser);
     }
 }
