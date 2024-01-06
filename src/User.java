@@ -72,8 +72,6 @@ public class User {
         User that = (User) obj;
         return Objects.equals(account, that.account);
     }
-
-    // Override the hashCode method to ensure proper functioning in collections
     @Override
     public int hashCode() {
         return (account != null ? account.hashCode() : 0);

@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class userService extends userManager implements userLogin,userForgotPassword {
-    void startProgram(Scanner scanner,String fileUser) {
+    void startProgram(Scanner scanner,String fileUser,String fileHistory) {
         try {
             while (true) {
                 System.out.println("\n"+"-----------------MENU-----------------");
@@ -15,7 +15,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                 scanner.nextLine();
                 switch (optionMenu) {
                     case 1:
-                        userLogin(scanner,fileUser);
+                        userLogin(scanner,fileUser,fileHistory);
                         break;
                     case 2:
                         userForgotPassword(scanner, fileUser);
@@ -32,7 +32,7 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();
         }
     }
-    void loginSuccess(Scanner scanner, String fileUser, User user){
+    void loginSuccess(Scanner scanner, String fileUser, User user,String fileHistory){
         try {
             while (true) {
                 System.out.println("-----------------MENU-----------------");
@@ -49,16 +49,16 @@ public class userService extends userManager implements userLogin,userForgotPass
                         checkBalance(scanner, user, fileUser);
                         break;
                     case 2:
-                        banking(scanner,user,fileUser);
+                        banking(scanner,user,fileUser,fileHistory);
                         break;
                     case 3:
-                        checkHistory(scanner, user,fileUser);
+                        checkHistory(scanner, user,fileUser,fileHistory);
                         break;
                     case 4:
-                        RechargePhone(scanner, user,fileUser);
+                        RechargePhone(scanner, user,fileUser,fileHistory);
                         break;
                     case 5 : 
-                        invoicing(scanner, user,fileUser);
+                        invoicing(scanner, user,fileUser,fileHistory);
                         break;
                     case 6:
                         return;
@@ -72,7 +72,7 @@ public class userService extends userManager implements userLogin,userForgotPass
         }
     }
 
-     void invoicing(Scanner scanner, User user, String fileUser) {
+     void invoicing(Scanner scanner, User user, String fileUser,String fileHistory) {
         try {
             while (true) {
                 System.out.println("-----------------MENU-----------------");
@@ -84,13 +84,13 @@ public class userService extends userManager implements userLogin,userForgotPass
                 scanner.nextLine();
                 switch (optionMenu){
                     case 1:
-                        electric(scanner,user,fileUser);
+                        electric(scanner,user,fileUser,fileHistory);
                         break;
                     case 2:
-                        internet(scanner,user,fileUser);
+                        internet(scanner,user,fileUser,fileHistory);
                         break;
                     case 3:
-                        water(scanner,user,fileUser);
+                        water(scanner,user,fileUser,fileHistory);
                         break;
                     case 4:
                         return;
@@ -103,24 +103,37 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();}
     }
 
-     void water(Scanner scanner, User user, String fileUser) {
+     void water(Scanner scanner, User user, String fileUser,String fileHistory) {
          List<User> users = getListObjectFromJsonFile(fileUser);
+         String waterAccount ="92839482";
          System.out.println("Nhập mã hoá đơn của bạn : ");
+
          String invoicingWater = scanner.nextLine();
 
          System.out.println("Nhập số tiền để thanh toán hoá đơn");
          if (scanner.hasNextDouble()) {
-             double moneyPhone = scanner.nextDouble();
+             double money = scanner.nextDouble();
              scanner.nextLine();
 
-             if (user.getBalance() < moneyPhone) {
+             if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
-                 user.setBalance(user.getBalance() - moneyPhone);
+                 user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
+                 transactionHistory transaction = new transactionHistory();
+                 transaction.setTransactionMoney(money);
+                 transaction.setTransactionNumberAccount(waterAccount);
+                 transaction.setTransactionNote(invoicingWater);
+                 transaction.setTransferAccount(user.getAccountNumber());
                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                 String formattedDateTime = LocalDateTime.now().format(formatter);
-                 System.out.println("Bạn đã thanh toán hoá đơn"+"\t"+invoicingWater+"\t"+"thành công"+"\t"+formattedDateTime);
+                 transaction.setDateTime(LocalDateTime.now().format(formatter));
+                 List<transactionHistory> historiesTransactions = new ArrayList<>();
+                 List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+                 historiesTransactions.add(transaction);
+                 if (!histories.isEmpty()) {
+                     historiesTransactions.addAll(histories);
+                 }
+                 convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
              System.out.println("Số tiền không hợp lệ!");
@@ -128,24 +141,36 @@ public class userService extends userManager implements userLogin,userForgotPass
          }
     }
 
-     void internet(Scanner scanner, User user, String fileUser) {
+     void internet(Scanner scanner, User user, String fileUser,String fileHistory) {
         List<User> users = getListObjectFromJsonFile(fileUser);
+        String internetAccount = "83726384";
          System.out.println("Nhập mã hoá đơn của bạn : ");
          String invoicingInternet = scanner.nextLine();
 
          System.out.println("Nhập số tiền để thanh toán hoá đơn");
          if (scanner.hasNextDouble()) {
-             double moneyPhone = scanner.nextDouble();
+             double money = scanner.nextDouble();
              scanner.nextLine();
 
-             if (user.getBalance() < moneyPhone) {
+             if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
-                 user.setBalance(user.getBalance() - moneyPhone);
+                 user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
+                 transactionHistory transaction = new transactionHistory();
+                 transaction.setTransactionMoney(money);
+                 transaction.setTransactionNumberAccount(internetAccount);
+                 transaction.setTransactionNote(invoicingInternet);
+                 transaction.setTransferAccount(user.getAccountNumber());
                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                 String formattedDateTime = LocalDateTime.now().format(formatter);
-                 System.out.println("Bạn đã thanh toán hoá đơn"+"\t"+invoicingInternet+"\t"+"thành công"+"\t"+formattedDateTime);
+                 transaction.setDateTime(LocalDateTime.now().format(formatter));
+                 List<transactionHistory> historiesTransactions = new ArrayList<>();
+                 List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+                 historiesTransactions.add(transaction);
+                 if (!histories.isEmpty()) {
+                     historiesTransactions.addAll(histories);
+                 }
+                 convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
              System.out.println("Số tiền không hợp lệ!");
@@ -154,25 +179,36 @@ public class userService extends userManager implements userLogin,userForgotPass
 
     }
 
-     void electric(Scanner scanner, User user, String fileUser) {
+     void electric(Scanner scanner, User user, String fileUser,String fileHistory) {
          List<User> users = getListObjectFromJsonFile(fileUser);
+         String electricAccount = "7294723";
          System.out.println("Nhập mã hoá đơn của bạn : ");
          String invoicingElectric = scanner.nextLine();
 
          System.out.println("Nhập số tiền để thanh toán hoá đơn");
          if (scanner.hasNextDouble()) {
-             double moneyPhone = scanner.nextDouble();
+             double money = scanner.nextDouble();
              scanner.nextLine();
 
-             if (user.getBalance() < moneyPhone) {
+             if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
-                 user.setBalance(user.getBalance() - moneyPhone);
+                 user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
-
+                 transactionHistory transaction = new transactionHistory();
+                 transaction.setTransactionMoney(money);
+                 transaction.setTransactionNumberAccount(electricAccount);
+                 transaction.setTransactionNote(invoicingElectric);
+                 transaction.setTransferAccount(user.getAccountNumber());
                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                 String formattedDateTime = LocalDateTime.now().format(formatter);
-                 System.out.println("Bạn đã thanh toán hoá đơn"+"\t"+invoicingElectric+"\t"+"thành công"+"\t"+formattedDateTime);
+                 transaction.setDateTime(LocalDateTime.now().format(formatter));
+                 List<transactionHistory> historiesTransactions = new ArrayList<>();
+                 List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+                 historiesTransactions.add(transaction);
+                 if (!histories.isEmpty()) {
+                     historiesTransactions.addAll(histories);
+                 }
+                 convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
              System.out.println("Số tiền không hợp lệ!");
@@ -180,7 +216,7 @@ public class userService extends userManager implements userLogin,userForgotPass
          }
     }
 
-     void RechargePhone(Scanner scanner, User user, String fileUser) {
+     void RechargePhone(Scanner scanner, User user, String fileUser,String fileHistory) {
          List<User> users = getListObjectFromJsonFile(fileUser);
          System.out.println("Nhập số điện thoại : ");
          String phoneNumber = scanner.nextLine();
@@ -192,17 +228,28 @@ public class userService extends userManager implements userLogin,userForgotPass
 
          System.out.println("Nhập số tiền cần nạp : ");
          if (scanner.hasNextDouble()) {
-             double moneyPhone = scanner.nextDouble();
+             double money = scanner.nextDouble();
              scanner.nextLine();
 
-             if (user.getBalance() < moneyPhone) {
+             if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
-                 user.setBalance(user.getBalance() - moneyPhone);
+                 user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
+                 transactionHistory transaction = new transactionHistory();
+                 transaction.setTransactionMoney(money);
+                 transaction.setTransactionNumberAccount(phoneNumber);
+                 transaction.setTransactionNote("Nạp tiền điện thoại");
+                 transaction.setTransferAccount(user.getAccountNumber());
                  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                 String formattedDateTime = LocalDateTime.now().format(formatter);
-                 System.out.println("Bạn đã nạp tiền thành công"+formattedDateTime);
+                 transaction.setDateTime(LocalDateTime.now().format(formatter));
+                 List<transactionHistory> historiesTransactions = new ArrayList<>();
+                 List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+                 historiesTransactions.add(transaction);
+                 if (!histories.isEmpty()) {
+                     historiesTransactions.addAll(histories);
+                 }
+                 convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
              System.out.println("Số tiền không hợp lệ!");
@@ -211,7 +258,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
     @Override
-    public void userLogin(Scanner scanner,String fileUser){
+    public void userLogin(Scanner scanner,String fileUser,String fileHistory){
     try {
         System.out.println("----------Đăng nhập----------");
         System.out.println("Nhập tài khoàn của bạn : ");
@@ -223,7 +270,7 @@ public class userService extends userManager implements userLogin,userForgotPass
         if (usersOptional.isPresent()){
             for (User user : users){
                 if (user.getAccount().equals(accountName)&&user.getPassword().equals(accountPassword)){
-                    loginSuccess(scanner,fileUser,user);
+                    loginSuccess(scanner,fileUser,user,fileHistory);
                     return;
                 }
             }
@@ -242,7 +289,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
     @Override
-    void banking(Scanner scanner,User user,String fileUser) {
+    void banking(Scanner scanner,User user,String fileUser,String fileHistory) {
         try {
             System.out.println("---------Chuyển tiền---------");
             System.out.println("Nhập số tài khoản thụ hưởng: ");
@@ -265,9 +312,24 @@ public class userService extends userManager implements userLogin,userForgotPass
                             user.setBalance(user.getBalance() - money);
                             recipient.setBalance(recipient.getBalance() + money);
                             convertObjectToJsonFile(fileUser, users);
+
+                            transactionHistory transaction = new transactionHistory();
+                            transaction.setTransactionMoney(money);
+                            transaction.setTransactionNumberAccount(toAccount);
+                            transaction.setTransactionNote(note);
+                            transaction.setTransferAccount(user.getAccountNumber());
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                            String formattedDateTime = LocalDateTime.now().format(formatter);
-                            System.out.println("Chuyển tiền thành công.\nThời gian giao dịch là: " + formattedDateTime + "\n" + note);
+                            transaction.setDateTime(LocalDateTime.now().format(formatter));
+                            List<transactionHistory> historiesTransactions = new ArrayList<>();
+                            List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+                            historiesTransactions.add(transaction);
+                            if (!histories.isEmpty()) {
+                                historiesTransactions.addAll(histories);
+                            }
+                            convertHistoryToJsonFile(fileHistory, historiesTransactions);
+
+
+                            System.out.println("Chuyển tiền thành công.");
                             return;
                         } else {
                             System.out.println("Số tiền bạn nhập sai.\nLưu ý: số tiền phải trên 50000 và ít hơn số dư tài khoản của bạn trừ đi 50000");
@@ -285,7 +347,17 @@ public class userService extends userManager implements userLogin,userForgotPass
         }
     }
     @Override
-    void checkHistory(Scanner scanner, User user, String fileUser) {
+    void checkHistory(Scanner scanner, User user, String fileUser,String fileHistory) {
+        System.out.println("------------Lịch sử giao dịch------------");
+        List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+        List<transactionHistory> newHistory = new ArrayList<>();
+        for (transactionHistory history :histories){
+            if (history.getTransferAccount().equals(user.getAccountNumber())){
+                newHistory.add(history);
+            }
+        }
+        System.out.println(newHistory);
+
     }
 
     @Override

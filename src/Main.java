@@ -1,9 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,8 +13,8 @@ public class Main {
         users.add(new User("techmaster","aaaaa111","66668888",500000000,"0864212365"));
         userManager.convertObjectToJsonFile("user.json", users);
         userService userService = new userService();
-        String History = "History.json";
+        String fileHistory = "history.json";
         String fileUser = "user.json";
-        userService.startProgram(scanner,fileUser);
+        userService.startProgram(scanner,fileUser,fileHistory);
     }
 }
