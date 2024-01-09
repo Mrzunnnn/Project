@@ -118,6 +118,7 @@ public class userService extends userManager implements userLogin,userForgotPass
              if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
+                 System.out.println("Bạn đã thanh toán thành công!");
                  user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
                  transactionHistory transaction = new transactionHistory();
@@ -136,8 +137,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                  convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
-             System.out.println("Số tiền không hợp lệ!");
-             scanner.nextLine();
+             throw new RuntimeException("Số tiền không hợp lệ!");
          }
     }
 
@@ -155,6 +155,7 @@ public class userService extends userManager implements userLogin,userForgotPass
              if (user.getBalance() < money) {
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
+                 System.out.println("Bạn đã thanh toán thành công!");
                  user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
                  transactionHistory transaction = new transactionHistory();
@@ -173,8 +174,8 @@ public class userService extends userManager implements userLogin,userForgotPass
                  convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
-             System.out.println("Số tiền không hợp lệ!");
-             scanner.nextLine();
+             throw new RuntimeException("Số tiền không hợp lệ!");
+
          }
 
     }
@@ -191,8 +192,9 @@ public class userService extends userManager implements userLogin,userForgotPass
              scanner.nextLine();
 
              if (user.getBalance() < money) {
-                 System.out.println("Số dư trong tài khoản không đủ!");
+                 throw new RuntimeException("Số dư trong tài khoản không đủ!");
              } else {
+                 System.out.println("Bạn đã thanh toán thành công!");
                  user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
                  transactionHistory transaction = new transactionHistory();
@@ -211,8 +213,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                  convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
-             System.out.println("Số tiền không hợp lệ!");
-             scanner.nextLine();
+             throw new RuntimeException("Số tiền không hợp lệ!");
          }
     }
 
@@ -222,8 +223,7 @@ public class userService extends userManager implements userLogin,userForgotPass
          String phoneNumber = scanner.nextLine();
 
          if (!isValidVietnamesePhoneNumber(phoneNumber)) {
-             System.out.println("Số điện thoại bạn nhập không chính xác");
-             return;
+             throw new RuntimeException("Số điện thoại bạn nhập không chính xác");
          }
 
          System.out.println("Nhập số tiền cần nạp : ");
@@ -232,8 +232,9 @@ public class userService extends userManager implements userLogin,userForgotPass
              scanner.nextLine();
 
              if (user.getBalance() < money) {
-                 System.out.println("Số dư trong tài khoản không đủ!");
+                 throw  new RuntimeException("Số dư trong tài khoản không đủ!");
              } else {
+                 System.out.println("Bạn đã nạp tiền thành công!");
                  user.setBalance(user.getBalance() - money);
                  convertObjectToJsonFile(fileUser, users);
                  transactionHistory transaction = new transactionHistory();
@@ -252,8 +253,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                  convertHistoryToJsonFile(fileHistory, historiesTransactions);
              }
          } else {
-             System.out.println("Số tiền không hợp lệ!");
-             scanner.nextLine();
+             throw new RuntimeException("Số tiền không hợp lệ!");
          }
     }
 
@@ -274,7 +274,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                     return;
                 }
             }
-            System.out.println("Tài khoản hoặc mật khẩu không chính xác");
+            throw new RuntimeException("Tài khoản hoặc mật khẩu không chính xác");
         }
     }
     catch (Exception e) {
@@ -332,8 +332,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                             System.out.println("Chuyển tiền thành công.");
                             return;
                         } else {
-                            System.out.println("Số tiền bạn nhập sai.\nLưu ý: số tiền phải trên 50000 và ít hơn số dư tài khoản của bạn trừ đi 50000");
-                            return;
+                            throw new RuntimeException("Số tiền bạn nhập sai.\nLưu ý: số tiền phải trên 50000 và ít hơn số dư tài khoản của bạn trừ đi 50000");
                         }
                     }
                 }
@@ -342,8 +341,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                 System.out.println("Danh sách người dùng trống.");
             }
         } catch (Exception e) {
-            System.out.println("Đã xảy ra lỗi trong quá trình chuyển tiền. Vui lòng thử lại sau.");
-            e.printStackTrace();
+            throw new RuntimeException("Đã xảy ra lỗi trong quá trình chuyển tiền. Vui lòng thử lại sau.");
         }
     }
     @Override
@@ -357,6 +355,9 @@ public class userService extends userManager implements userLogin,userForgotPass
             }
         }
         System.out.println(newHistory);
+        if (newHistory.isEmpty()){
+            System.out.println("Chưa có giao dịch nào");
+        }
 
     }
 
@@ -397,7 +398,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                     }
                 }
             }
-            System.out.println("Số điện thoại không tồn tại trong hệ thống.");
+            throw new RuntimeException("Số điện thoại không tồn tại trong hệ thống.");
         }
     }
 }
