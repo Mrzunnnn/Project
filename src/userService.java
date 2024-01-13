@@ -4,13 +4,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class userService extends userManager implements userLogin,userForgotPassword {
-    void startProgram(Scanner scanner,String fileUser,String fileHistory) {
+    void startProgram(Scanner scanner,String fileUser,String fileHistory){
         try {
             while (true) {
                 System.out.println("\n"+"-----------------MENU-----------------");
                 System.out.println("1. Đăng nhập");
                 System.out.println("2. Quên mật khẩu");
                 System.out.println("3. Thoát");
+                System.out.println("Nhập lựa chọn của bạn :");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
                 switch (optionMenu) {
@@ -27,8 +28,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                         break;
                 }
             }
-
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -42,6 +42,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                 System.out.println("4. Nạp tiền điện thoại");
                 System.out.println("5. Hoá đơn");
                 System.out.println("6. Thoát");
+                System.out.println("Nhập lựa chọn của bạn : ");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
                 switch (optionMenu) {
@@ -80,6 +81,7 @@ public class userService extends userManager implements userLogin,userForgotPass
                 System.out.println("2. Mạng");
                 System.out.println("3. Nước");
                 System.out.println("4. Thoát");
+                System.out.println("Nhập lựa chọn của bạn : ");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
                 switch (optionMenu){

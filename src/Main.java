@@ -5,7 +5,7 @@ import java.util.Scanner;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         List<User> users = new ArrayList<>();
         users.add(new User("Dung01","dung2503","123456789",5000000,"0969298263"));
