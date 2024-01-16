@@ -3,14 +3,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class userService extends userManager implements userLogin,userForgotPassword {
+public class userService extends userManager implements userLogin,userForgotPassword,register {
     void startProgram(Scanner scanner,String fileUser,String fileHistory){
         try {
             while (true) {
                 System.out.println("\n"+"-----------------MENU-----------------");
                 System.out.println("1. Đăng nhập");
                 System.out.println("2. Quên mật khẩu");
-                System.out.println("3. Thoát");
+                System.out.println("3. Đăng kí");
+                System.out.println("4. Thoát");
+
                 System.out.println("Nhập lựa chọn của bạn :");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
@@ -21,7 +23,9 @@ public class userService extends userManager implements userLogin,userForgotPass
                     case 2:
                         userForgotPassword(scanner, fileUser);
                         break;
-                    case 3:
+                    case 3 :
+                        register(scanner,fileUser);
+                    case 4:
                         return;
                     default:
                         System.out.println("Không có chức năng này.Xin mời nhập lại : ");
@@ -32,6 +36,7 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();
         }
     }
+
     void loginSuccess(Scanner scanner, String fileUser, User user,String fileHistory){
         try {
             while (true) {
@@ -72,6 +77,57 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();
         }
     }
+
+  @Override
+  public void register(Scanner scanner, String fileUser){
+      try {
+          System.out.println("Nhập tên tài khoản : ");
+          String newAccount = scanner.nextLine();
+          System.out.println("Nhập mật khẩu : ");
+          String newPassword = scanner.nextLine();
+          System.out.println("Nhập số điện thoại của bạn : ");
+          String newTelephone = scanner.nextLine();
+
+          List<User> users = getListObjectFromJsonFile(fileUser);
+
+          boolean isValidAccount = true;
+
+          for (User user : users) {
+              if (user.getAccount().equals(newAccount)) {
+                  System.out.println("Tài khoản đã có người sử dụng");
+                  isValidAccount = false;
+                  break;
+              }
+          }
+
+          if (isValidAccount && !isValidVietnamesePhoneNumber(newTelephone)) {
+              System.out.println("Số điện thoại của bạn không đúng");
+              isValidAccount = false;
+          }
+
+          if (isValidAccount) {
+              System.out.println("Bạn đã đăng kí thành công");
+              Random random = new Random();
+              int newAccountNumber = random.nextInt(99999999) + 10000000;
+
+              User newUser = new User();
+              newUser.setAccount(newAccount);
+              newUser.setPassword(newPassword);
+              newUser.setPhone(newTelephone);
+              newUser.setBalance(0);
+              newUser.setAccountNumber(String.valueOf(newAccountNumber));
+              List<User> userList = new ArrayList<>();
+              List<User> listUser = getListObjectFromJsonFile(fileUser);
+              userList.add(newUser);
+              if (!listUser.isEmpty()) {
+                  userList.addAll(listUser);
+              }
+              convertObjectToJsonFile(fileUser, userList);
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+  }
 
      void invoicing(Scanner scanner, User user, String fileUser,String fileHistory) {
         try {

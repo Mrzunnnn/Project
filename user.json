@@ -1,5 +1,12 @@
 [
   {
+    "account": "haha",
+    "password": "hahaha",
+    "accountNumber": "104120624",
+    "balance": 0.0,
+    "phone": "0969289293"
+  },
+  {
     "account": "Dung01",
     "password": "dung2503",
     "accountNumber": "123456789",
