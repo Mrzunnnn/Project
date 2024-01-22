@@ -6,6 +6,15 @@ public class User {
     private String accountNumber;
     private double balance;
     private String phone;
+    private int role;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
 
     public String getAccount() {
         return account;
@@ -49,12 +58,13 @@ public class User {
     public User(){
 
     }
-    public User(String account,String password,String accountNumber,double balance,String phone){
+    public User(String account,String password,String accountNumber,double balance,String phone,int role){
         this.account = account;
         this.password = password;
         this.accountNumber = accountNumber;
         this.balance = balance;
         this.phone = phone;
+        this.role = role;
     }
     @Override
     public String toString() {

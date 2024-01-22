@@ -11,6 +11,10 @@ import java.util.*;
 
 
 public abstract class userManager {
+    abstract  void  banAccount(Scanner scanner, String fileUser);
+    abstract void checkHistoryAdmin(Scanner scanner, String fileUser, String fileHistory);
+    abstract void checkAccount(Scanner scanner, String fileUser);
+    abstract  void payment(Scanner scanner, User user, String fileHistory, String fileUser);
     abstract void water(Scanner scanner, User user, String fileUser,String fileHistory);
     abstract void internet(Scanner scanner, User user, String fileUser,String fileHistory);
     abstract void electric(Scanner scanner, User user, String fileUser,String fileHistory);
@@ -46,6 +50,40 @@ public abstract class userManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static void convertlistAdminToJsonFile(String fileAdmin,List<admin> admins) {
+        try {
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            Writer writer = Files.newBufferedWriter(Paths.get(fileAdmin));
+
+            gson.toJson(admins,writer);
+
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<admin> getlistAdminFromJsonFile(String fileAdmin) {
+        try {
+
+            Gson gson = new Gson();
+            Reader reader = Files.newBufferedReader(Paths.get(fileAdmin));
+
+            admin[] userLstGson = gson.fromJson(reader, admin[].class);
+
+            if (userLstGson == null) {
+                return Collections.emptyList();
+            } else {
+                List<admin> admins = Arrays.asList(userLstGson);
+                reader.close();
+                return admins;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
     public List<User> getListObjectFromJsonFile(String fileUser) {
         try {

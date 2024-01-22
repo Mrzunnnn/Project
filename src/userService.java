@@ -1,31 +1,35 @@
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class userService extends userManager implements userLogin,userForgotPassword,register {
-    void startProgram(Scanner scanner,String fileUser,String fileHistory){
+public class userService extends userManager implements userLogin,userForgotPassword,register,registerAdmin {
+    void startProgram(Scanner scanner,String fileUser,String fileHistory,String fileAdmin){
         try {
             while (true) {
                 System.out.println("\n"+"-----------------MENU-----------------");
                 System.out.println("1. Đăng nhập");
                 System.out.println("2. Quên mật khẩu");
                 System.out.println("3. Đăng kí");
-                System.out.println("4. Thoát");
+                System.out.println("4. Đăng kí admin");
+                System.out.println("5. Thoát");
 
                 System.out.println("Nhập lựa chọn của bạn :");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
                 switch (optionMenu) {
                     case 1:
-                        userLogin(scanner,fileUser,fileHistory);
+                        userLogin(scanner,fileUser,fileHistory,fileAdmin);
                         break;
                     case 2:
                         userForgotPassword(scanner, fileUser);
                         break;
                     case 3 :
                         register(scanner,fileUser);
+                        break;
                     case 4:
+                        registerAdmin(scanner,fileAdmin);
+                        break;
+                    case 5:
                         return;
                     default:
                         System.out.println("Không có chức năng này.Xin mời nhập lại : ");
@@ -36,17 +40,102 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();
         }
     }
+    void loginSuccessAdmin(Scanner scanner, String fileUser,String fileHistory,String fileAdmin){
+        try{
+            while (true){
+                System.out.println("-----------------MENU-----------------");
+                System.out.println("1. Kiểm tra thông tin tài khoản");
+                System.out.println("2. Kiếm tra lịch sử giao dịch");
+                System.out.println("3. Khoá tài khoản ");
+                System.out.println("4. Thoát");
+                int optionMenu = checkIntNumber(scanner);
+                scanner.nextLine();
+                switch (optionMenu){
+                    case 1 :
+                        checkAccount(scanner,fileUser);
+                        break;
+                    case 2 :
+                        checkHistoryAdmin(scanner,fileUser,fileHistory);
+                        break;
+                    case 3 :
+                        banAccount(scanner,fileUser);
+                        break;
+                    case 4 :
+                        return;
+                    default:
+                        System.out.println("không có chức năng này xin mời nhập lại");
+                        break;
+                }
+
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+     void banAccount(Scanner scanner, String fileUser) {
+        System.out.println("Nhập số tài khoản bạn muốn khoá : ");
+        String banAcc = scanner.nextLine();
+        List<User> users = getListObjectFromJsonFile(fileUser);
+        for (User user :users){
+            if (user.getAccountNumber().equals(banAcc)){
+                user.setRole(2);
+                convertObjectToJsonFile(fileUser,users);
+                System.out.println("Đã khoá tài khoản này");
+                break;
+            }
+            System.out.println("Số tài khoản không tồn tại");
+        }
+
+    }
+
+     void checkHistoryAdmin(Scanner scanner, String fileUser, String fileHistory) {
+         System.out.println("Nhập số tài khoản bạn muốn kiểm tra : ");
+         String checkAcc = scanner.nextLine();
+         List<User> userList = getListObjectFromJsonFile(fileUser);
+         List<transactionHistory> histories = getHistoryFromJsonFile(fileHistory);
+         for (User user : userList) {
+             if (user.getAccountNumber().equals(checkAcc)) {
+                 List<transactionHistory> newHistory = new ArrayList<>();
+                 for (transactionHistory history : histories) {
+                     if (history.getTransferAccount().equals(user.getAccountNumber())) {
+                         newHistory.add(history);
+                     }
+                 }
+                 System.out.println(newHistory);
+                 if (newHistory.isEmpty()) {
+                     System.out.println("Chưa có giao dịch nào");
+                 }
+             }
+         }
+    }
+
+     void checkAccount(Scanner scanner, String fileUser) {
+         System.out.println("Nhập số tài khoản bạn muốn kiểm tra : ");
+         String checkAcc = scanner.nextLine();
+         List<User>userList=getListObjectFromJsonFile(fileUser);
+         for (User user :userList){
+             if (user.getAccountNumber().equals(checkAcc)){
+                 System.out.println("Số tài khoản : "+user.getAccountNumber());
+                 System.out.println("Số dư : " + user.getBalance());
+                 System.out.println("Trạng thái : "+ user.getRole());
+                 System.out.println("Số điện thoại : "+user.getPhone());
+             }
+         }
+        
+    }
 
     void loginSuccess(Scanner scanner, String fileUser, User user,String fileHistory){
         try {
-            while (true) {
+            while (user.getRole()==0) {
                 System.out.println("-----------------MENU-----------------");
                 System.out.println("1. Truy vấn số dư tài khoản");
                 System.out.println("2. Chuyển tiền");
                 System.out.println("3. Xem lịch sử giao dịch");
                 System.out.println("4. Nạp tiền điện thoại");
                 System.out.println("5. Hoá đơn");
-                System.out.println("6. Thoát");
+                System.out.println("6. Nạp tiền vào tài khoản");
+                System.out.println("7. Thoát");
                 System.out.println("Nhập lựa chọn của bạn : ");
                 int optionMenu = checkIntNumber(scanner);
                 scanner.nextLine();
@@ -66,20 +155,69 @@ public class userService extends userManager implements userLogin,userForgotPass
                     case 5 : 
                         invoicing(scanner, user,fileUser,fileHistory);
                         break;
-                    case 6:
+                    case 6 :
+                        payment(scanner,user,fileUser,fileHistory);
+                        break;
+                    case 7:
                         return;
                     default:
                         System.out.println("không có chức năng này xin mời nhập lại");
                         break;
                 }
             }
+            throw new RuntimeException("Tài khoản của bạn đã bị khoá");
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-  @Override
-  public void register(Scanner scanner, String fileUser){
+    @Override
+    public void registerAdmin(Scanner scanner, String fileAdmin) {
+        System.out.println("Mời nhập mã nhân viên của bạn : ");
+        String id = scanner.nextLine();
+
+        if (id.equals("25032001")) {
+            System.out.println("Nhập tên tài khoản : ");
+            String newAccount = scanner.nextLine();
+            List<admin> admins = getlistAdminFromJsonFile(fileAdmin);
+
+            boolean accountExists = false;
+            for (admin ad : admins) {
+                if (ad.getAccount().equals(newAccount)) {
+                    System.out.println("Tài khoản của bạn đã tồn tại!");
+                    accountExists = true;
+                    break;
+                }
+            }
+
+            if (!accountExists) {
+                System.out.println("Nhập mật khẩu : ");
+                String newpassword = scanner.nextLine();
+                System.out.println("Nhập tên : ");
+                String newname = scanner.nextLine();
+
+                admin newAdmin = new admin();
+                newAdmin.setName(newname);
+                newAdmin.setAccount(newAccount);
+                newAdmin.setRole(1);
+                newAdmin.setPassword(newpassword);
+
+                List<admin> adminList = new ArrayList<>();
+                List<admin> listAdmin = getlistAdminFromJsonFile(fileAdmin);
+                adminList.add(newAdmin);
+                if (!listAdmin.isEmpty()) {
+                    adminList.addAll(listAdmin);
+                }
+                convertlistAdminToJsonFile(fileAdmin, adminList);
+
+                System.out.println("Bạn đã tạo tài khoản thành công");
+            }
+        } else {
+            throw new RuntimeException("Mã nhân viên của bạn không hợp lệ");
+        }
+    }
+    @Override
+     public void register(Scanner scanner, String fileUser){
       try {
           System.out.println("Nhập tên tài khoản : ");
           String newAccount = scanner.nextLine();
@@ -87,6 +225,7 @@ public class userService extends userManager implements userLogin,userForgotPass
           String newPassword = scanner.nextLine();
           System.out.println("Nhập số điện thoại của bạn : ");
           String newTelephone = scanner.nextLine();
+
 
           List<User> users = getListObjectFromJsonFile(fileUser);
 
@@ -116,6 +255,7 @@ public class userService extends userManager implements userLogin,userForgotPass
               newUser.setPhone(newTelephone);
               newUser.setBalance(0);
               newUser.setAccountNumber(String.valueOf(newAccountNumber));
+              newUser.setRole(0);
               List<User> userList = new ArrayList<>();
               List<User> listUser = getListObjectFromJsonFile(fileUser);
               userList.add(newUser);
@@ -124,10 +264,30 @@ public class userService extends userManager implements userLogin,userForgotPass
               }
               convertObjectToJsonFile(fileUser, userList);
           }
+
       } catch (Exception e) {
           e.printStackTrace();
       }
   }
+     void payment(Scanner scanner,User user ,String fileHistory,String fileUser){
+         System.out.println("Số tiền bạn muốn nạp vào tài khoản:");
+         double moneyPayment = scanner.nextDouble();
+         List<User> userList = getListObjectFromJsonFile(fileUser);
+         List<User> newmoney = new ArrayList<>();
+         if (moneyPayment>50000) {
+             for (User u : userList) {
+                 if (!u.getAccount().equals(user.getAccount())) {
+                     newmoney.add(u);
+                 }
+             }
+             user.setBalance(user.getBalance() + moneyPayment);
+             newmoney.add(user);
+             convertObjectToJsonFile(fileUser, newmoney);
+             System.out.println("Bạn đã nạp tiền thành công!");
+         }
+         throw new RuntimeException("số tiền phải trên 50000!");
+     }
+
 
      void invoicing(Scanner scanner, User user, String fileUser,String fileHistory) {
         try {
@@ -162,7 +322,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
      void water(Scanner scanner, User user, String fileUser,String fileHistory) {
-         List<User> users = getListObjectFromJsonFile(fileUser);
+         List<User> userList = getListObjectFromJsonFile(fileUser);
          String waterAccount ="92839482";
          System.out.println("Nhập mã hoá đơn của bạn : ");
 
@@ -177,8 +337,15 @@ public class userService extends userManager implements userLogin,userForgotPass
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
                  System.out.println("Bạn đã thanh toán thành công!");
+                 List<User> newmoney = new ArrayList<>();
+                 for (User u : userList) {
+                     if (!u.getAccount().equals(user.getAccount() )) {
+                         newmoney.add(u);
+                     }
+                 }
                  user.setBalance(user.getBalance() - money);
-                 convertObjectToJsonFile(fileUser, users);
+                 newmoney.add(user);
+                 convertObjectToJsonFile(fileUser, newmoney);
                  transactionHistory transaction = new transactionHistory();
                  transaction.setTransactionMoney(money);
                  transaction.setTransactionNumberAccount(waterAccount);
@@ -200,7 +367,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
      void internet(Scanner scanner, User user, String fileUser,String fileHistory) {
-        List<User> users = getListObjectFromJsonFile(fileUser);
+        List<User> userList = getListObjectFromJsonFile(fileUser);
         String internetAccount = "83726384";
          System.out.println("Nhập mã hoá đơn của bạn : ");
          String invoicingInternet = scanner.nextLine();
@@ -214,8 +381,15 @@ public class userService extends userManager implements userLogin,userForgotPass
                  System.out.println("Số dư trong tài khoản không đủ!");
              } else {
                  System.out.println("Bạn đã thanh toán thành công!");
+                 List<User> newmoney = new ArrayList<>();
+                 for (User u : userList) {
+                     if (!u.getAccount().equals(user.getAccount() )) {
+                         newmoney.add(u);
+                     }
+                 }
                  user.setBalance(user.getBalance() - money);
-                 convertObjectToJsonFile(fileUser, users);
+                 newmoney.add(user);
+                 convertObjectToJsonFile(fileUser, newmoney);
                  transactionHistory transaction = new transactionHistory();
                  transaction.setTransactionMoney(money);
                  transaction.setTransactionNumberAccount(internetAccount);
@@ -239,7 +413,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
      void electric(Scanner scanner, User user, String fileUser,String fileHistory) {
-         List<User> users = getListObjectFromJsonFile(fileUser);
+         List<User> userList = getListObjectFromJsonFile(fileUser);
          String electricAccount = "7294723";
          System.out.println("Nhập mã hoá đơn của bạn : ");
          String invoicingElectric = scanner.nextLine();
@@ -253,8 +427,15 @@ public class userService extends userManager implements userLogin,userForgotPass
                  throw new RuntimeException("Số dư trong tài khoản không đủ!");
              } else {
                  System.out.println("Bạn đã thanh toán thành công!");
+                 List<User> newmoney = new ArrayList<>();
+                 for (User u : userList) {
+                     if (!u.getAccount().equals(user.getAccount() )) {
+                         newmoney.add(u);
+                     }
+                 }
                  user.setBalance(user.getBalance() - money);
-                 convertObjectToJsonFile(fileUser, users);
+                 newmoney.add(user);
+                 convertObjectToJsonFile(fileUser, newmoney);
                  transactionHistory transaction = new transactionHistory();
                  transaction.setTransactionMoney(money);
                  transaction.setTransactionNumberAccount(electricAccount);
@@ -276,7 +457,7 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
      void RechargePhone(Scanner scanner, User user, String fileUser,String fileHistory) {
-         List<User> users = getListObjectFromJsonFile(fileUser);
+         List<User> userList = getListObjectFromJsonFile(fileUser);
          System.out.println("Nhập số điện thoại : ");
          String phoneNumber = scanner.nextLine();
 
@@ -293,8 +474,15 @@ public class userService extends userManager implements userLogin,userForgotPass
                  throw  new RuntimeException("Số dư trong tài khoản không đủ!");
              } else {
                  System.out.println("Bạn đã nạp tiền thành công!");
+                 List<User> newmoney = new ArrayList<>();
+                 for (User u : userList) {
+                     if (!u.getAccount().equals(user.getAccount() )) {
+                         newmoney.add(u);
+                     }
+                 }
                  user.setBalance(user.getBalance() - money);
-                 convertObjectToJsonFile(fileUser, users);
+                 newmoney.add(user);
+                 convertObjectToJsonFile(fileUser, newmoney);
                  transactionHistory transaction = new transactionHistory();
                  transaction.setTransactionMoney(money);
                  transaction.setTransactionNumberAccount(phoneNumber);
@@ -316,23 +504,33 @@ public class userService extends userManager implements userLogin,userForgotPass
     }
 
     @Override
-    public void userLogin(Scanner scanner,String fileUser,String fileHistory){
+    public void userLogin(Scanner scanner,String fileUser,String fileHistory,String fileAdmin){
     try {
         System.out.println("----------Đăng nhập----------");
         System.out.println("Nhập tài khoàn của bạn : ");
         String accountName = scanner.nextLine();
         System.out.println("Nhập mật khẩu của bạn : ");
         String accountPassword = scanner.nextLine();
-        List<User> users = getListObjectFromJsonFile(fileUser);
-        Optional<List<User>> usersOptional = Optional.ofNullable(users);
+        List<User> userList = getListObjectFromJsonFile(fileUser);
+        List<admin> adminList = getlistAdminFromJsonFile(fileAdmin);
+        Optional<List<User>> usersOptional = Optional.ofNullable(userList);
         if (usersOptional.isPresent()){
-            for (User user : users){
+            for (User user : userList){
                 if (user.getAccount().equals(accountName)&&user.getPassword().equals(accountPassword)){
                     loginSuccess(scanner,fileUser,user,fileHistory);
                     return;
                 }
             }
-            throw new RuntimeException("Tài khoản hoặc mật khẩu không chính xác");
+
+        }
+        Optional<List<admin>> adminsOptional = Optional.ofNullable(adminList);
+        if (adminsOptional.isPresent()){
+            for (admin admins : adminList){
+                if (admins.getAccount().equals(accountName)&&admins.getPassword().equals(accountPassword)){
+                    loginSuccessAdmin(scanner,fileUser,fileHistory,fileAdmin);
+                    return;
+                }
+            }throw new RuntimeException("Tài khoản hoặc mật khẩu không chính xác");
         }
     }
     catch (Exception e) {
@@ -360,17 +558,28 @@ public class userService extends userManager implements userLogin,userForgotPass
             System.out.println("Nội dung chuyển khoản: ");
             String note = scanner.nextLine();
 
-            List<User> users = getListObjectFromJsonFile(fileUser);
-            Optional<List<User>> usersOptional = Optional.ofNullable(users);
+            List<User> userList = getListObjectFromJsonFile(fileUser);
+            Optional<List<User>> usersOptional = Optional.ofNullable(userList);
 
             if (usersOptional.isPresent()) {
-                for (User recipient : users) {
+                for (User recipient : userList) {
                     if (recipient.getAccountNumber().equals(toAccount)) {
                         if (50000 < money && money < user.getBalance() - 50000) {
+                            List<User> newmoney = new ArrayList<>();
+                            for (User u : userList) {
+                                if (!u.getAccount().equals(user.getAccount() )) {
+                                    newmoney.add(u);
+                                }
+                            }
+                            for (User toU : userList){
+                             if(toU.getAccountNumber().equals(toAccount)){
+                                 recipient.setBalance(recipient.getBalance() + money);
+                             }
+                            }
                             user.setBalance(user.getBalance() - money);
+                            newmoney.add(user);
+                            convertObjectToJsonFile(fileUser, newmoney);
                             recipient.setBalance(recipient.getBalance() + money);
-                            convertObjectToJsonFile(fileUser, users);
-
                             transactionHistory transaction = new transactionHistory();
                             transaction.setTransactionMoney(money);
                             transaction.setTransactionNumberAccount(toAccount);

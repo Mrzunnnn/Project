@@ -1,30 +1,34 @@
 [
   {
-    "account": "haha",
-    "password": "hahaha",
-    "accountNumber": "104120624",
-    "balance": 0.0,
-    "phone": "0969289293"
-  },
-  {
-    "account": "Dung01",
-    "password": "dung2503",
-    "accountNumber": "123456789",
-    "balance": 5000000.0,
-    "phone": "0969298263"
+    "account": "tpbank",
+    "password": "hahaha1",
+    "accountNumber": "81293618",
+    "balance": 100000.0,
+    "phone": "0964578493",
+    "role": 2
   },
   {
     "account": "hello",
-    "password": "abc12345",
-    "accountNumber": "88884444",
-    "balance": 8000000.0,
-    "phone": "0324685123"
+    "password": "hahaha",
+    "accountNumber": "69177783",
+    "balance": 200000.0,
+    "phone": "0984884558",
+    "role": 0
   },
   {
-    "account": "techmaster",
-    "password": "aaaaa111",
-    "accountNumber": "66668888",
-    "balance": 5.0E8,
-    "phone": "0864212365"
+    "account": "hii1",
+    "password": "hahaha",
+    "accountNumber": "69177744",
+    "balance": 110000.0,
+    "phone": "0984884558",
+    "role": 0
+  },
+  {
+    "account": "haha",
+    "password": "hahaha",
+    "accountNumber": "69177791",
+    "balance": 9900000.0,
+    "phone": "0984884558",
+    "role": 0
   }
 ]
