@@ -40,6 +40,7 @@ public class userService extends userManager implements userLogin,userForgotPass
             e.printStackTrace();
         }
     }
+
     void loginSuccessAdmin(Scanner scanner, String fileUser,String fileHistory,String fileAdmin){
         try{
             while (true){
@@ -216,6 +217,7 @@ public class userService extends userManager implements userLogin,userForgotPass
             throw new RuntimeException("Mã nhân viên của bạn không hợp lệ");
         }
     }
+
     @Override
      public void register(Scanner scanner, String fileUser){
       try {
@@ -269,6 +271,7 @@ public class userService extends userManager implements userLogin,userForgotPass
           e.printStackTrace();
       }
   }
+
      void payment(Scanner scanner,User user ,String fileHistory,String fileUser){
          System.out.println("Số tiền bạn muốn nạp vào tài khoản:");
          double moneyPayment = scanner.nextDouble();
@@ -287,7 +290,6 @@ public class userService extends userManager implements userLogin,userForgotPass
          }
          throw new RuntimeException("số tiền phải trên 50000!");
      }
-
 
      void invoicing(Scanner scanner, User user, String fileUser,String fileHistory) {
         try {
@@ -611,6 +613,7 @@ public class userService extends userManager implements userLogin,userForgotPass
             throw new RuntimeException("Đã xảy ra lỗi trong quá trình chuyển tiền. Vui lòng thử lại sau.");
         }
     }
+
     @Override
     void checkHistory(Scanner scanner, User user, String fileUser,String fileHistory) {
         System.out.println("------------Lịch sử giao dịch------------");
@@ -625,7 +628,6 @@ public class userService extends userManager implements userLogin,userForgotPass
         if (newHistory.isEmpty()){
             System.out.println("Chưa có giao dịch nào");
         }
-
     }
 
     @Override

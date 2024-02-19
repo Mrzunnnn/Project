@@ -1,5 +1,12 @@
 [
   {
+    "transferAccount": "69177783",
+    "dateTime": "18-02-2024 22:13:10",
+    "transactionMoney": 100000.0,
+    "transactionNote": "Nạp tiền điện thoại",
+    "transactionNumberAccount": "0987635534"
+  },
+  {
     "transferAccount": "69177791",
     "dateTime": "22-01-2024 15:10:18",
     "transactionMoney": 100000.0,
@@ -124,20 +131,5 @@
     "transactionMoney": 3000000.0,
     "transactionNote": "haha",
     "transactionNumberAccount": "69177791"
-  },
-  {
-    "transactionMoney": 0.0
-  },
-  {
-    "transactionMoney": 0.0
-  },
-  {
-    "transactionMoney": 0.0
-  },
-  {
-    "transactionMoney": 0.0
-  },
-  {
-    "transactionMoney": 0.0
   }
 ]

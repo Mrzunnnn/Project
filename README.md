@@ -16,6 +16,14 @@ Có các chức năng như :
 
 7.Thanh toán hoá đơn : Thanh toán hoá đơn bằng chương trình.
 
+Admin :
+
+Tạo tài khoản admin :
+
+Khoá tài khoản user : Có thể khoá 1 tài khoản user mà bạn muốn.
+
+Check tài khoản user : Có thể 
+
 Yêu cầu cài đặt : 
 
 Sử dụng : win/mac/linux.

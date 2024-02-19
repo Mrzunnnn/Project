@@ -1,5 +1,13 @@
 [
   {
+    "account": "vpbank",
+    "password": "hahaha1",
+    "accountNumber": "52819717",
+    "balance": 0.0,
+    "phone": "0964736743",
+    "role": 0
+  },
+  {
     "account": "tpbank",
     "password": "hahaha1",
     "accountNumber": "81293618",

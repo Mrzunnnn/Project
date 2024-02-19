@@ -57,11 +57,11 @@ public class transactionHistory {
     }
 @Override
     public String toString(){
-        return "Tài khoản gốc là :"+transferAccount+"\n"+
-                "thời gian giao dịch"+ dateTime +"\n"+
+        return "Tài khoản gốc là : "+transferAccount+"\n"+
+                "Thời gian giao dịch : "+ dateTime +"\n"+
                 "Nội dung chuyển khoản là :"+transactionNote+"\n"
-                +"Số tiền :"+"\n"+ transactionMoney+"\n"
-                +"Tài khoản hưởng thụ"+"\n"+ transactionNumberAccount+"\n"
-                +"}";
+                +"Số tiền :"+"\t"+ transactionMoney+"\n"
+                +"Tài khoản hưởng thụ : "+"\t"+ transactionNumberAccount+"\n"
+                ;
 }
 }

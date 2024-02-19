@@ -12,17 +12,29 @@ import java.util.*;
 
 public abstract class userManager {
     abstract  void  banAccount(Scanner scanner, String fileUser);
+    
     abstract void checkHistoryAdmin(Scanner scanner, String fileUser, String fileHistory);
+
     abstract void checkAccount(Scanner scanner, String fileUser);
+
     abstract  void payment(Scanner scanner, User user, String fileHistory, String fileUser);
+
     abstract void water(Scanner scanner, User user, String fileUser,String fileHistory);
+
     abstract void internet(Scanner scanner, User user, String fileUser,String fileHistory);
+
     abstract void electric(Scanner scanner, User user, String fileUser,String fileHistory);
+
     abstract  void RechargePhone(Scanner scanner,User user,String fileUser,String fileHistory);
+
     abstract void invoicing(Scanner scanner,User user, String fileUser,String fileHistory);
+
     abstract void checkBalance(Scanner scanner, User user, String fileUser);
+
     abstract void banking(Scanner scanner,User user ,String fileUser,String fileHistory);
+
     abstract void checkHistory(Scanner scanner, User user, String fileUser,String fileHistory);
+
     public static void convertObjectToJsonFile(String fileName, List<User> users) {
         try {
 
@@ -37,6 +49,7 @@ public abstract class userManager {
             e.printStackTrace();
         }
     }
+
     public static void convertHistoryToJsonFile(String fileHistory,List<transactionHistory> histories) {
         try {
 
@@ -51,6 +64,7 @@ public abstract class userManager {
             e.printStackTrace();
         }
     }
+
     public static void convertlistAdminToJsonFile(String fileAdmin,List<admin> admins) {
         try {
 
@@ -65,6 +79,7 @@ public abstract class userManager {
             e.printStackTrace();
         }
     }
+
     public List<admin> getlistAdminFromJsonFile(String fileAdmin) {
         try {
 
@@ -85,6 +100,7 @@ public abstract class userManager {
         }
         return Collections.emptyList();
     }
+
     public List<User> getListObjectFromJsonFile(String fileUser) {
         try {
 
@@ -105,6 +121,7 @@ public abstract class userManager {
         }
         return Collections.emptyList();
     }
+
     public List<transactionHistory> getHistoryFromJsonFile(String fileHistory) {
         try {
             Gson gson = new Gson();
